@@ -1,0 +1,51 @@
+name: Publish to pub.dev
+
+# Publishes when a version tag is pushed (e.g. `git tag v1.2.3 && git push origin v1.2.3`),
+# which is also what creating a GitHub Release with a new tag does.
+#
+# One-time setup on pub.dev: Package Admin -> Automated publishing ->
+# enable "Publish from GitHub Actions", repository `rmayobre/zero-nads`,
+# tag pattern `v{{version}}`. (Optionally require the `pub.dev` environment.)
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: pub.dev
+    permissions:
+      contents: read
+      id-token: write # Required for OIDC authentication with pub.dev
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dart-lang/setup-dart@v1
+
+      - name: Verify tag matches pubspec version
+        run: |
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          PUBSPEC_VERSION="$(grep -E '^version:' pubspec.yaml | awk '{print $2}')"
+          if [ "$TAG_VERSION" != "$PUBSPEC_VERSION" ]; then
+            echo "::error::Tag version ($TAG_VERSION) does not match pubspec.yaml version ($PUBSPEC_VERSION)"
+            exit 1
+          fi
+
+      - name: Install dependencies
+        run: dart pub get
+
+      - name: Check formatting
+        run: dart format --output=none --set-exit-if-changed lib example
+
+      - name: Analyze
+        run: dart analyze --fatal-infos
+
+      - name: Test
+        run: dart test
+
+      - name: Dry run
+        run: dart pub publish --dry-run
+
+      - name: Publish
+        run: dart pub publish --force
