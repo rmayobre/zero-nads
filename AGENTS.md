@@ -43,4 +43,4 @@ Run `dart analyze` and `dart test` before considering a change done.
 ## Repository notes
 
 - `pubspec.lock` is gitignored (library package).
-- The `test/` directory currently contains a stray nested copy of the package (`test/lib`, `test/example`, `test/pubspec.yaml`, `test/zero-nads-claude/`, …) that is staged in git. It is not part of the real package; don't edit it or treat it as source, and ask the maintainer before deleting it.
+- Releases are published to pub.dev by `.github/workflows/publish.yml` when a `vX.Y.Z` tag is pushed. The tag must match the `version:` in `pubspec.yaml`.
