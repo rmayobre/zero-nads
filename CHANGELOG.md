@@ -1,3 +1,14 @@
+## 0.1.1
+
+- Code style and formatting fixes across `lib/` and `example/`.
+
+## 0.1.0
+
+- Renamed the package from `zero` to `zero_nads`; the public entry point is now `package:zero_nads/zero_nads.dart`.
+- Added `Effect` type.
+- Added runnable examples for each type in `example/`.
+- Expanded `README.md` with documentation for every type.
+
 ## 0.0.1
 
 ### Core monadic types
