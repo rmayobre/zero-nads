@@ -81,8 +81,9 @@ extension type const Result<T extends Object>._(_ResultData<T> _data) {
   T getOrThrow() {
     if (isFailure) {
       var stacktrace = _data.stackTrace;
-      if (stacktrace != null)
+      if (stacktrace != null) {
         Error.throwWithStackTrace(_data.failure!, stacktrace);
+      }
       throw _data.failure!;
     }
     return _data.success!;
