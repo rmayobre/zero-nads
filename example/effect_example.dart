@@ -24,9 +24,9 @@ void main() {
   print(doubled.run()); // 10
 
   // --- FlatMap (chain synchronous effects) ---
-  final chained = Effect(() => 'hello')
-      .flatMap((s) => Effect(() => '$s world'))
-      .map((s) => s.toUpperCase());
+  final chained = Effect(
+    () => 'hello',
+  ).flatMap((s) => Effect(() => '$s world')).map((s) => s.toUpperCase());
   print(chained.run()); // HELLO WORLD
 
   // --- onEach (side effect, then forward value) ---

@@ -15,7 +15,7 @@ typedef _EitherData<L extends Object, R extends Object> = ({L? left, R? right});
 /// nullable — both must extend [Object].
 @eager
 extension type const Either<L extends Object, R extends Object>._(
-  _EitherData<L, R> _data,
+  _EitherData<L, R> _data
 ) {
   /// Creates an [Either] holding a left value.
   const Either.left(L value) : this._((left: value, right: null));

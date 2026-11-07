@@ -32,16 +32,22 @@ void main() async {
   }
 
   // --- FlatMap ---
-  final expanded = Flow.fromIterable([1, 2, 3])
-      .flatMap((x) => Flow.fromIterable([x, x * 10]));
+  final expanded = Flow.fromIterable([
+    1,
+    2,
+    3,
+  ]).flatMap((x) => Flow.fromIterable([x, x * 10]));
   print('expanded:');
   await for (final n in expanded.collect()) {
     print(n); // 1 10 2 20 3 30
   }
 
   // --- onEach (side effect) ---
-  final logged = Flow.fromIterable(['a', 'b', 'c'])
-      .onEach((s) => print('processing: $s'));
+  final logged = Flow.fromIterable([
+    'a',
+    'b',
+    'c',
+  ]).onEach((s) => print('processing: $s'));
   await for (final _ in logged.collect()) {} // processing: a, b, c
 
   // --- Take / Drop ---
@@ -58,9 +64,9 @@ void main() async {
   }
 
   // --- Fold ---
-  final sum = await Flow.of(numbersStream())
-      .fold<int>(0, (acc, x) => acc + x)
-      .run();
+  final sum = await Flow.of(
+    numbersStream(),
+  ).fold<int>(0, (acc, x) => acc + x).run();
   print('sum: $sum'); // 55
 
   // --- Recover from errors ---

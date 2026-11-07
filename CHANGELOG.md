@@ -1,3 +1,9 @@
+## 0.1.1
+
+- Fix `Either` extension type declaration (trailing comma in the representation field is rejected by newer Dart SDKs).
+- Add braces to single-statement `if` bodies in `require` and `Result.getOrThrow` to satisfy `curly_braces_in_flow_control_structures`.
+- Reformat `lib/` and `example/` with the current Dart formatter.
+
 ## 0.0.1
 
 ### Core monadic types
