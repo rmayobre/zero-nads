@@ -25,9 +25,9 @@ void main() {
   final doubled = Option(5).map((x) => x * 2);
   print('doubled: ${doubled.getOrNull()}'); // 10
 
-  final email = findUser(1)
-      .map((name) => name.toLowerCase())
-      .map((name) => '$name@example.com');
+  final email = findUser(
+    1,
+  ).map((name) => name.toLowerCase()).map((name) => '$name@example.com');
   print('email: ${email.getOrNull()}'); // alice@example.com
 
   final missingEmail = findUser(99).map((name) => '$name@example.com');

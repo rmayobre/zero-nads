@@ -53,8 +53,9 @@ void main() {
   print(failed.rightOrNull()); // Not a number: bad
 
   // --- MapLeft / MapRight ---
-  final uppercased = validateUsername('alice')
-      .mapLeft((name) => name.toUpperCase());
+  final uppercased = validateUsername(
+    'alice',
+  ).mapLeft((name) => name.toUpperCase());
   print(uppercased.leftOrNull()); // ALICE
 
   // --- FlatMap (chain validations) ---
