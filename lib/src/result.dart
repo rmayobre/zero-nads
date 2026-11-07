@@ -7,7 +7,11 @@ import 'internal/typedefs.dart';
 import 'option.dart';
 import 'task.dart';
 
-typedef _ResultData<T extends Object> = ({T? success, Object? failure, StackTrace? stackTrace});
+typedef _ResultData<T extends Object> = ({
+  T? success,
+  Object? failure,
+  StackTrace? stackTrace,
+});
 
 /// Represents the outcome of an operation that may either succeed with a value
 /// of type [T] or fail with an error object and an optional [StackTrace].
@@ -17,12 +21,13 @@ typedef _ResultData<T extends Object> = ({T? success, Object? failure, StackTrac
 /// are never `null`.
 @eager
 extension type const Result<T extends Object>._(_ResultData<T> _data) {
-
   /// Creates a failed [Result] wrapping [error] and an optional [stackTrace].
-  const Result.failure(Object error, [StackTrace? stackTrace]) : this._((success: null, failure: error, stackTrace: stackTrace));
+  const Result.failure(Object error, [StackTrace? stackTrace])
+    : this._((success: null, failure: error, stackTrace: stackTrace));
 
   /// Creates a successful [Result] wrapping [value].
-  const Result.success(T value) : this._((success: value, failure: null, stackTrace: null));
+  const Result.success(T value)
+    : this._((success: value, failure: null, stackTrace: null));
 
   /// Runs [compute] and wraps the return value in [Result.success].
   ///
@@ -40,7 +45,9 @@ extension type const Result<T extends Object>._(_ResultData<T> _data) {
   ///
   /// If [compute] throws, the error and current stack trace are captured in a
   /// [Result.failure] instead of propagating.
-  static Future<Result<T>> runAsync<T extends Object>(Calculation<FutureOr<T>> compute) async {
+  static Future<Result<T>> runAsync<T extends Object>(
+    Calculation<FutureOr<T>> compute,
+  ) async {
     try {
       return Result.success(await compute());
     } catch (error, stacktrace) {
@@ -74,7 +81,8 @@ extension type const Result<T extends Object>._(_ResultData<T> _data) {
   T getOrThrow() {
     if (isFailure) {
       var stacktrace = _data.stackTrace;
-      if (stacktrace != null) Error.throwWithStackTrace(_data.failure!, stacktrace);
+      if (stacktrace != null)
+        Error.throwWithStackTrace(_data.failure!, stacktrace);
       throw _data.failure!;
     }
     return _data.success!;

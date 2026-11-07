@@ -1,8 +1,7 @@
 import 'flow.dart';
 
 /// Extensions on [Stream] for converting to zero-nads types.
-extension StreamExtensions <T> on Stream<T> {
-
+extension StreamExtensions<T> on Stream<T> {
   /// Wraps this [Stream] in a lazy [Flow].
   Flow<T> flow() => Flow(() async* {
     yield* this;

@@ -15,7 +15,6 @@ import 'task.dart';
 /// external producer.
 @eager
 extension type Snapshot<T extends Object>._(_SnapshotState<T> _data) {
-
   // @throws because source.listen() throws StateError if source is a
   // single-subscription stream that already has a listener.
 
@@ -58,7 +57,10 @@ extension type Snapshot<T extends Object>._(_SnapshotState<T> _data) {
   /// to the current value, and whose stream reflects future transformed events.
   @throws
   Snapshot<R> map<R extends Object>(Transformation<T, R> transformer) =>
-      Snapshot(transformer(_data.value), _data.controller.stream.map(transformer));
+      Snapshot(
+        transformer(_data.value),
+        _data.controller.stream.map(transformer),
+      );
 
   /// Returns a new [Snapshot] backed by the stream produced by [transformer],
   /// with [initial] as the starting value.
@@ -66,8 +68,13 @@ extension type Snapshot<T extends Object>._(_SnapshotState<T> _data) {
   /// The caller must supply [initial] because a synchronous starting value
   /// cannot be derived from an async [Flow].
   // flatMap cannot derive an initial value synchronously, so the caller supplies one.
-  Snapshot<R> flatMap<R extends Object>(Transformation<T, Flow<R>> transformer, R initial) =>
-      Snapshot(initial, _data.controller.stream.asyncExpand((s) => transformer(s).collect()));
+  Snapshot<R> flatMap<R extends Object>(
+    Transformation<T, Flow<R>> transformer,
+    R initial,
+  ) => Snapshot(
+    initial,
+    _data.controller.stream.asyncExpand((s) => transformer(s).collect()),
+  );
 
   /// Returns a new [Snapshot] that forwards only elements satisfying [predicate].
   ///
@@ -78,17 +85,21 @@ extension type Snapshot<T extends Object>._(_SnapshotState<T> _data) {
 
   /// Applies [process] to each emitted element as a side effect, then forwards
   /// the element unchanged.
-  Snapshot<T> onEach(ValueCallable<T> process) =>
-      Snapshot(_data.value, _data.controller.stream.map((element) {
-        process(element);
-        return element;
-      }));
+  Snapshot<T> onEach(ValueCallable<T> process) => Snapshot(
+    _data.value,
+    _data.controller.stream.map((element) {
+      process(element);
+      return element;
+    }),
+  );
 
   /// Returns a new [Snapshot] limited to the next [n] emitted events.
-  Snapshot<T> take(int n) => Snapshot(_data.value, _data.controller.stream.take(n));
+  Snapshot<T> take(int n) =>
+      Snapshot(_data.value, _data.controller.stream.take(n));
 
   /// Returns a new [Snapshot] that skips the next [n] emitted events.
-  Snapshot<T> drop(int n) => Snapshot(_data.value, _data.controller.stream.skip(n));
+  Snapshot<T> drop(int n) =>
+      Snapshot(_data.value, _data.controller.stream.skip(n));
 
   //
   // Transformers
@@ -115,7 +126,6 @@ extension type Snapshot<T extends Object>._(_SnapshotState<T> _data) {
 }
 
 final class _SnapshotState<T extends Object> {
-
   T value;
 
   final StreamController<T> controller; // Broadcast controller

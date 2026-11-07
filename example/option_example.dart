@@ -30,8 +30,7 @@ void main() {
       .map((name) => '$name@example.com');
   print('email: ${email.getOrNull()}'); // alice@example.com
 
-  final missingEmail = findUser(99)
-      .map((name) => '$name@example.com');
+  final missingEmail = findUser(99).map((name) => '$name@example.com');
   print('missing: ${missingEmail.isNone}'); // true
 
   final chained = Option(3).flatMap((x) => Option(x > 0 ? x * 10 : null));
@@ -58,10 +57,7 @@ void main() {
   print('failed zip: ${failedPair.isNone}'); // true
 
   // --- Fold ---
-  final result = findUser(2).fold(
-    () => 'nobody',
-    (name) => 'Found: $name',
-  );
+  final result = findUser(2).fold(() => 'nobody', (name) => 'Found: $name');
   print(result); // Found: Bob
 
   // --- ToList ---

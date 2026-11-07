@@ -14,8 +14,9 @@ typedef _EitherData<L extends Object, R extends Object> = ({L? left, R? right});
 /// primary (success) case, mirroring [Result]. Neither [L] nor [R] may be
 /// nullable — both must extend [Object].
 @eager
-extension type const Either<L extends Object, R extends Object>._(_EitherData<L, R> _data) {
-
+extension type const Either<L extends Object, R extends Object>._(
+  _EitherData<L, R> _data,
+) {
   /// Creates an [Either] holding a left value.
   const Either.left(L value) : this._((left: value, right: null));
 
@@ -33,10 +34,14 @@ extension type const Either<L extends Object, R extends Object>._(_EitherData<L,
   //
 
   /// Returns the left value, or throws [StateError] if this is a right.
-  @throws L get left => checkNotNull(_data.left, () => 'Either<$L, $R> is not $L - $_data');
+  @throws
+  L get left =>
+      checkNotNull(_data.left, () => 'Either<$L, $R> is not $L - $_data');
 
   /// Returns the right value, or throws [StateError] if this is a left.
-  @throws R get right => checkNotNull(_data.right, () => 'Either<$L, $R> is not $R - $_data');
+  @throws
+  R get right =>
+      checkNotNull(_data.right, () => 'Either<$L, $R> is not $R - $_data');
 
   /// Returns the left value, or `null` if this is a right.
   L? leftOrNull() => _data.left;
@@ -51,10 +56,12 @@ extension type const Either<L extends Object, R extends Object>._(_EitherData<L,
   R rightOrDefault(R def) => _data.right ?? def;
 
   /// Returns the left value, or the result of [compute] if this is a right.
-  @throws L leftOrElse(Calculation<L> compute) => _data.left ?? compute();
+  @throws
+  L leftOrElse(Calculation<L> compute) => _data.left ?? compute();
 
   /// Returns the right value, or the result of [compute] if this is a left.
-  @throws R rightOrElse(Calculation<R> compute) => _data.right ?? compute();
+  @throws
+  R rightOrElse(Calculation<R> compute) => _data.right ?? compute();
 
   //
   // Transformers
@@ -66,7 +73,7 @@ extension type const Either<L extends Object, R extends Object>._(_EitherData<L,
   @throws
   R2 fold<R2>({
     required Transformation<L, R2> left,
-    required Transformation<R, R2> right
+    required Transformation<R, R2> right,
   }) {
     if (isLeft) return left(this.left);
     if (isRight) return right(this.right);
@@ -87,7 +94,9 @@ extension type const Either<L extends Object, R extends Object>._(_EitherData<L,
   ///
   /// Propagates the right value unchanged when this is a right.
   @throws
-  Either<L2, R> flatMapLeft<L2 extends Object>(Transformation<L, Either<L2, R>> f) {
+  Either<L2, R> flatMapLeft<L2 extends Object>(
+    Transformation<L, Either<L2, R>> f,
+  ) {
     if (isLeft) return f(left);
     if (isRight) return Either.right(right);
     error('Either<$L, $R> is neither - $_data');
@@ -102,7 +111,8 @@ extension type const Either<L extends Object, R extends Object>._(_EitherData<L,
   R getOrDefault(R def) => _data.right ?? def;
 
   /// Returns the right value, or the result of [compute] if this holds a left.
-  @throws R getOrElse(Calculation<R> compute) => _data.right ?? compute();
+  @throws
+  R getOrElse(Calculation<R> compute) => _data.right ?? compute();
 
   /// Transforms the left value, leaving the right value unchanged.
   @throws

@@ -123,7 +123,8 @@ void main() async {
 
   // --- Valid request ---
   final r1 = await loadUser('1');
-  r1.onSuccess((p) => print('Loaded: $p'))
+  r1
+      .onSuccess((p) => print('Loaded: $p'))
       .onFailure((e) => print('Failed: $e'));
   // [state] loading
   // [state] success

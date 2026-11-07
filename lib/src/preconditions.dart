@@ -46,7 +46,8 @@ Never error(String message) => throw StateError(message);
 @throws
 @inline
 void require(bool condition, [String Function()? message]) {
-  if (condition == false) throw ArgumentError(message?.call() ?? conditionCheckMsg);
+  if (condition == false)
+    throw ArgumentError(message?.call() ?? conditionCheckMsg);
 }
 
 /// Returns [value] if it is non-null, otherwise throws [ArgumentError].

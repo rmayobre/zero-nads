@@ -64,15 +64,16 @@ void main() async {
   print('sum: $sum'); // 55
 
   // --- Recover from errors ---
-  final errorFlow = Flow<int>(() async* {
-    yield 1;
-    yield 2;
-    throw Exception('something broke');
-  }).recover((pair) {
-    final (error, _) = pair;
-    print('recovered from: $error');
-    return -1;
-  });
+  final errorFlow =
+      Flow<int>(() async* {
+        yield 1;
+        yield 2;
+        throw Exception('something broke');
+      }).recover((pair) {
+        final (error, _) = pair;
+        print('recovered from: $error');
+        return -1;
+      });
 
   await for (final n in errorFlow.collect()) {
     print(n); // 1  2  recovered from: ...  -1

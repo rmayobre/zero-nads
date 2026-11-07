@@ -54,26 +54,30 @@ extension type const Flow<T>._(Calculation<Stream<T>> _compute) {
   /// exception is forwarded as an error downstream.
   @throws
   Flow<T> recover(Transformation<(Object, StackTrace?), T> attempt) => Flow(() {
-    return _compute().transform(StreamTransformer.fromHandlers(
-      handleData: (data, sink) => sink.add(data),
-      handleError: (error, stackTrace, sink) {
-        try {
-          sink.add(attempt((error, stackTrace)));
-        } catch (e, st) {
-          sink.addError(e, st);
-        }
-      },
-    ));
+    return _compute().transform(
+      StreamTransformer.fromHandlers(
+        handleData: (data, sink) => sink.add(data),
+        handleError: (error, stackTrace, sink) {
+          try {
+            sink.add(attempt((error, stackTrace)));
+          } catch (e, st) {
+            sink.addError(e, st);
+          }
+        },
+      ),
+    );
   });
 
   /// Silently drops any errors emitted by the flow, preventing them from
   /// propagating to the subscriber. Data events pass through unchanged.
-  Flow<T> catchErrors() => Flow(() => _compute().transform(
-    StreamTransformer.fromHandlers(
-      handleData: (data, sink) => sink.add(data),
-      handleError: (_, _, _) {},
+  Flow<T> catchErrors() => Flow(
+    () => _compute().transform(
+      StreamTransformer.fromHandlers(
+        handleData: (data, sink) => sink.add(data),
+        handleError: (_, _, _) {},
+      ),
     ),
-  ));
+  );
 
   /// Emits at most the first [n] elements.
   Flow<T> take(int n) => Flow(() => _compute().take(n));
@@ -101,8 +105,7 @@ extension type const Flow<T>._(Calculation<Stream<T>> _compute) {
 }
 
 /// Extensions on non-nullable [Flow] elements.
-extension NonNullFlowExtensions <T extends Object> on Flow<T> {
-
+extension NonNullFlowExtensions<T extends Object> on Flow<T> {
   /// Converts this [Flow] into a [Snapshot] with the given [initial] value.
   ///
   /// The [Snapshot] holds the latest emitted value and broadcasts subsequent

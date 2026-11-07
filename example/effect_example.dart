@@ -9,9 +9,9 @@ Effect<String> buildDatabaseUrl() {
   final host = readEnv('DB_HOST', 'localhost');
   final port = readEnv('DB_PORT', '5432');
   final name = readEnv('DB_NAME', 'myapp');
-  return host.flatMap((h) =>
-      port.flatMap((p) =>
-          name.map((n) => 'postgres://$h:$p/$n')));
+  return host.flatMap(
+    (h) => port.flatMap((p) => name.map((n) => 'postgres://$h:$p/$n')),
+  );
 }
 
 void main() {
@@ -30,8 +30,7 @@ void main() {
   print(chained.run()); // HELLO WORLD
 
   // --- onEach (side effect, then forward value) ---
-  final logged = Effect(() => 99)
-      .onEach((x) => print('computed: $x'));
+  final logged = Effect(() => 99).onEach((x) => print('computed: $x'));
   final value = logged.run(); // prints: computed: 99
   print(value); // 99
 

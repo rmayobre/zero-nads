@@ -14,6 +14,5 @@ import 'package:meta/meta.dart';
 const throws = _Throws();
 
 final class _Throws {
-
   const _Throws();
 }

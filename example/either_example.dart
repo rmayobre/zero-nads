@@ -63,9 +63,10 @@ void main() {
     return Either.left(email);
   }
 
-  final registration = validateUsername('alice')
-      .flatMap((name) => validateEmail('alice@example.com')
-          .mapLeft((email) => '$name:$email'));
+  final registration = validateUsername('alice').flatMap(
+    (name) =>
+        validateEmail('alice@example.com').mapLeft((email) => '$name:$email'),
+  );
   print(registration.leftOrNull()); // alice:alice@example.com
 
   // --- Swap ---
@@ -82,6 +83,6 @@ void main() {
 
   // --- Side effects ---
   validateUsername('carol')
-      .onLeft((name) => print('Accepted: $name'))  // Accepted: carol
+      .onLeft((name) => print('Accepted: $name')) // Accepted: carol
       .onRight((err) => print('Rejected: $err'));
 }

@@ -28,9 +28,10 @@ void main() async {
   print(await upper.run()); // ALICE
 
   // --- FlatMap (chain async operations) ---
-  final withPermissions = fetchUser(1)
-      .flatMap((name) => fetchPermissions(name)
-          .map((perms) => '$name: ${perms.join(', ')}'));
+  final withPermissions = fetchUser(1).flatMap(
+    (name) =>
+        fetchPermissions(name).map((perms) => '$name: ${perms.join(', ')}'),
+  );
   print(await withPermissions.run()); // Alice: read, write
 
   // --- Zip (run concurrently) ---
@@ -57,7 +58,7 @@ void main() async {
 
   // --- Side effects ---
   await fetchUser(2)
-      .onSuccess((name) => print('Loaded: $name'))  // Loaded: Bob
+      .onSuccess((name) => print('Loaded: $name')) // Loaded: Bob
       .onFailure((err) => print('Failed: $err'))
       .run();
 

@@ -8,7 +8,6 @@ import 'internal/typedefs.dart';
 /// without triggering execution.
 @lazy
 extension type Task<T>(Calculation<Future<T>> _compute) {
-
   /// Creates a [Task] that completes immediately with [value].
   factory Task.of(T value) => Task(() async => value);
 
@@ -50,18 +49,22 @@ extension type Task<T>(Calculation<Future<T>> _compute) {
 
   /// Calls [f] with the resolved value as a side effect, then forwards the value.
   Task<T> onSuccess(ValueCallable<T> f) {
-    return Task(() => _compute().then((value) {
-      f(value);
-      return value;
-    }));
+    return Task(
+      () => _compute().then((value) {
+        f(value);
+        return value;
+      }),
+    );
   }
 
   /// Calls [f] with any thrown error as a side effect, then rethrows it.
   Task<T> onFailure(ValueCallable<Object> f) {
-    return Task(() => _compute().onError((error, _) {
-      f(error!);
-      return Future.error(error);
-    }));
+    return Task(
+      () => _compute().onError((error, _) {
+        f(error!);
+        return Future.error(error);
+      }),
+    );
   }
 
   /// Runs this [Task] and [other] concurrently, returning both results as a tuple.
@@ -79,15 +82,14 @@ extension type Task<T>(Calculation<Future<T>> _compute) {
   Future<T> run() {
     try {
       return _compute();
-    } catch(error, stackTrace) {
+    } catch (error, stackTrace) {
       return Future.error(error, stackTrace);
     }
   }
 }
 
 /// Extensions on [Task] whose result is an [Iterable].
-extension IterableTaskExtensions <T extends Object> on Task<Iterable<T>> {
-
+extension IterableTaskExtensions<T extends Object> on Task<Iterable<T>> {
   /// Runs the [Task] and emits each element of the resulting iterable as a [Stream].
   Stream<T> flatten() async* {
     yield* Stream.fromIterable(await run());

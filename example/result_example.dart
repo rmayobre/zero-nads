@@ -46,12 +46,12 @@ void main() {
   print(propagated.isFailure); // true
 
   // --- FlatMap (chain operations) ---
-  final chained = lookupUser(1).flatMap((name) =>
-      Result.success('Hello, $name!'));
+  final chained = lookupUser(1)
+      .flatMap((name) => Result.success('Hello, $name!'));
   print(chained.getOrNull()); // Hello, Alice!
 
-  final chainedFailure = lookupUser(99).flatMap((name) =>
-      Result.success('Hello, $name!'));
+  final chainedFailure = lookupUser(99)
+      .flatMap((name) => Result.success('Hello, $name!'));
   print(chainedFailure.isFailure); // true
 
   // --- Fold ---
@@ -65,7 +65,8 @@ void main() {
   final recovered = lookupUser(99).recover((_) => 'Guest');
   print(recovered.getOrNull()); // Guest
 
-  final recoveredWith = lookupUser(99).recoverWith((_) => Result.success('Guest'));
+  final recoveredWith = lookupUser(99)
+      .recoverWith((_) => Result.success('Guest'));
   print(recoveredWith.getOrNull()); // Guest
 
   // --- MapFailure ---
@@ -74,7 +75,7 @@ void main() {
 
   // --- Side Effects ---
   lookupUser(1)
-      .onSuccess((name) => print('Success: $name'))  // Success: Alice
+      .onSuccess((name) => print('Success: $name')) // Success: Alice
       .onFailure((err) => print('Failed: $err'));
 
   // --- Convert to other types ---
